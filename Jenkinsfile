@@ -1,53 +1,42 @@
 pipeline {
-    agent any
-    
+    agent {
+        docker {
+            image 'node:22-alpine'
+        }
+    }
+
     options {
         ansiColor('xterm')
     }
 
     stages {
-        stage('build') {
-            agent {
-                docker {
-                    image 'node:22-alpine'
-                }
-            }
+
+        stage('Build') {
             steps {
                 sh 'npm ci'
                 sh 'npm ls vitest'
                 sh 'ls -la node_modules/vitest'
                 sh 'npm run build'
-}
+            }
         }
 
-        stage('test') {
-    parallel {
-        stage('unit tests') {
-            agent {
-                docker {
-                    image 'node:22-alpine'
-                    reuseNode true
-                }
-            }
+        stage('Test') {
             steps {
                 sh 'pwd'
                 sh 'ls -la'
-                sh 'ls -la node_modules || true'
-                sh 'npm ls vitest || true'
+                sh 'ls -la node_modules'
+                sh 'npm ls vitest'
                 sh 'npx vitest run --reporter=verbose'
             }
         }
-    }
-}
 
-        stage('deploy') {
+        stage('Deploy') {
             agent {
                 docker {
                     image 'alpine'
                 }
             }
             steps {
-                // Mock deployment which does nothing
                 echo 'Mock deployment was successful!'
             }
         }
