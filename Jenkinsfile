@@ -14,8 +14,10 @@ pipeline {
             }
             steps {
                 sh 'npm ci'
+                sh 'npm ls vitest'
+                sh 'ls -la node_modules/vitest'
                 sh 'npm run build'
-            }
+}
         }
 
         stage('test') {
