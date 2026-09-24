@@ -21,14 +21,33 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'ls -la node_modules'
-                sh 'npm ls vitest'
-                sh 'npx vitest run --reporter=verbose'
-            }
-        }
+    steps {
+        sh '''
+            echo "===== TEST START ====="
+
+            echo "===== PWD ====="
+            pwd
+
+            echo "===== NODE ====="
+            node --version
+
+            echo "===== NPM ====="
+            npm --version
+
+            echo "===== VITEST ====="
+            npm ls vitest
+
+            echo "===== BEFORE VITEST ====="
+            echo "About to execute Vitest"
+
+            npx vitest --version
+
+            echo "===== AFTER VITEST VERSION ====="
+            echo "Test stage continues"
+
+        '''
+    }
+}
 
         stage('Deploy') {
             agent {
