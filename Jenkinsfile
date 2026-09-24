@@ -20,12 +20,23 @@ pipeline {
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                }
+            }
             steps {
+                sh 'npm ci'
                 sh 'npx vitest run --reporter=verbose'
             }
         }
 
         stage('Deploy') {
+            agent {
+                docker {
+                    image 'alpine'
+                }
+            }
             steps {
                 echo 'Mock deployment was successful!'
             }
