@@ -20,14 +20,18 @@ pipeline {
         }
 
         stage('Test') {
-            agent {
-                docker {
-                    image 'node:22-alpine'
+            parallel {
+                stage('Unit tests') {
+                    agent {
+                        docker {
+                            image 'node:22-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh 'npx vitest run --reporter=verbose'
+                    }
                 }
-            }
-            steps {
-                sh 'npm ci'
-                sh 'npx vitest run --reporter=verbose'
             }
         }
 
